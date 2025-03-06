@@ -1,0 +1,117 @@
+---
+title: "Dynamic Confirmed List Protocol"
+description: "Enforces automatic creation and management of a dynamic confirmed list for explicit, structured, and precise interactions between Cursor AI and users."
+file_pattern: "**/*.md"
+---
+
+## 🚨 Automated Interaction Protocol
+
+### Initialization (Auto-enforced)
+On conversation start, initialize explicitly:
+
+
+### Behavioral Rules (Cursor AI Strictly Follows)
+
+1. **Automatic Initialization**
+   - On new conversation, immediately initialize:
+     ```
+     Dynamic Confirmed List initialized: Confirmed Items
+     ```
+
+2. **Explicit Item Addition**
+   - Syntax:
+     ```
+     confirmed: <exact item>
+     ```
+   - Immediate acknowledgment:
+     ```
+     Confirmed item added: '<exact item>'.
+     Current Confirmed Items:
+     1. First item
+     2. Second item
+     ```
+
+3. **Explicit Item Update**
+   - Syntax:
+     ```
+     Update confirmed item '<old item>' to '<new item>'.
+     ```
+   - Immediate acknowledgment:
+     ```
+     Confirmed item updated: '<old item>' replaced with '<new item>'.
+     Current Confirmed Items:
+     1. First item
+     2. Updated item
+     ```
+
+4. **Explicit List Display**
+   - When explicitly requested:
+     ```
+     Current Confirmed Items:
+     1. First item
+     2. Second item
+     ```
+
+5. **Error Handling**
+   - If requested item not found:
+     ```
+     Item '<old item>' not found in the confirmed list.
+     ```
+   - Ambiguous requests trigger explicit clarification:
+     ```
+     Please clarify your confirmation or update.
+     ```
+
+---
+
+## 🚨 Mandatory Adherence Rules (No Exceptions)
+
+- **Explicit confirmations ONLY**: Actions occur solely through explicit syntax (`confirmed:`).
+- **Immediate Feedback**: Clearly confirm all list operations instantly.
+- **Consistent Formatting**: Maintain structured, enumerated lists for readability and clarity.
+- **Proactive Initialization**: Ensure dynamic confirmed list always initialized upon conversation start.
+
+---
+
+## ⚙️ Internal Implementation Logic (For Reference)
+
+```python
+class DynamicConfirmedList:
+    def __init__(self, title="Confirmed Items"):
+        self.title = title
+        self.items = []
+
+    def add_item(self, item):
+        if item not in self.items:
+            self.items.append(item)
+        return f"Confirmed item added: '{item}'. Current Confirmed Items:\n" + self.display()
+
+    def update_item(self, old_item, new_item):
+        if old_item in self.items:
+            self.items[self.items.index(old_item)] = new_item
+            return f"Confirmed item updated: '{old_item}' replaced with '{new_item}'. Current Confirmed Items:\n" + self.display()
+        else:
+            return f"Item '{old_item}' not found in the confirmed list."
+
+    def display(self):
+        return "\n".join([f"{i + 1}. {item}" for i, item in enumerate(self.items)])
+
+def process_user_input(user_input, confirmed_list):
+    user_input = user_input.strip()
+    if user_input.lower().startswith("confirmed:"):
+        item = user_input.split("confirmed:", 1)[1].strip()
+        return confirmed_list.add_item(item)
+
+    elif user_input.lower().startswith("update confirmed item"):
+        parts = user_input.split("'")
+        if len(parts) >= 4:
+            old_item, new_item = parts[1], parts[3]
+            return confirmed_list.update_item(old_item, new_item)
+        else:
+            return "Please clarify your update request."
+
+    elif user_input.lower().startswith("please show"):
+        return "Current Confirmed Items:\n" + confirmed_list.display()
+
+    else:
+        return "Please clarify your confirmation or update."
